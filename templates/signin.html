@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+
+{#
+  Iteration 4: Authentication Portal
+  --------------------------------------------------------------------
+  Core Functionality: Local email/password session management.
+  
+  Source: Flask PRG pattern (Post/Redirect/Get)
+  https://flask.palletsprojects.com/en/stable/patterns/postredirectget/
+  
+  Refurbishment: Implements a high-focus 'Glassmorphic' layout using 
+  Iteration 4 'ThinkTradie' design tokens for a premium professional entry.
+#}
+
+<div class="max-w-xl mx-auto py-12">
+  <header class="text-center mb-10">
+    <h1 class="text-5xl font-black tracking-tighter uppercase italic mb-2">
+      {% if mode == "signup" %}
+        <span class="text-white">Join</span> <span class="text-accent">Pro</span>
+      {% else %}
+        <span class="text-white">Sign</span> <span class="text-accent">In</span>
+      {% endif %}
+    </h1>
+    <p class="text-white/40 font-medium tracking-tight leading-relaxed">
+      Enter your details to access the 
+      <span class="text-white">Think</span><span class="text-accent">Tradie</span> 
+      dashboard
+    </p>
+  </header>
+
+  <div class="bg-white/5 border border-white/10 rounded-5xl p-10 shadow-2xl relative overflow-hidden">
+    <div class="absolute top-0 right-0 h-1 w-full bg-accent shadow-[0_0_15px_#ccff00]"></div>
+    
+    {# 
+       Source: Flask Tutorial - Auth Blueprints & Views
+       https://flask.palletsprojects.com/en/stable/tutorial/views/#authentication
+       Technique: Dynamic form action based on 'mode' context variable.
+    #}
+    <form method="post" action="{{ url_for('signup' if mode == 'signup' else 'signin') }}" class="space-y-6">
+      
+      {% if mode == "signup" %}
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2" for="first_name">First Name</label>
+            <input id="first_name" name="first_name" type="text" autocomplete="given-name" required
+                   class="w-full px-6 py-4 bg-black/40 border border-white/10 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all">
+          </div>
+          <div class="space-y-2">
+            <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2" for="last_name">Last Name</label>
+            <input id="last_name" name="last_name" type="text" autocomplete="family-name" required
+                   class="w-full px-6 py-4 bg-black/40 border border-white/10 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all">
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="space-y-2">
+        <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2" for="email">Email Address</label>
+        <input id="email" name="email" type="email" autocomplete="email" required
+               class="w-full px-6 py-4 bg-black/40 border border-white/10 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all">
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2" for="password">Password</label>
+        <input id="password" name="password" type="password" required
+               autocomplete="{{ 'new-password' if mode == 'signup' else 'current-password' }}"
+               class="w-full px-6 py-4 bg-black/40 border border-white/10 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all">
+        
+        {% if mode == "signup" %}
+          {# Password constraint communication as per auth logic in app.py #}
+          <p class="text-[10px] text-white/20 font-bold uppercase tracking-widest px-2 leading-relaxed">
+            Minimum 8 characters required for secure storage
+          </p>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="w-full py-5 bg-accent text-black font-black rounded-3xl shadow-[0_15px_40px_rgba(204,255,0,0.15)] hover:scale-[1.02] transition-all uppercase tracking-widest">
+        {% if mode == "signup" %}CREATE ACCOUNT{% else %}SIGN IN{% endif %}
+      </button>
+    </form>
+
+    <div class="mt-8 pt-8 border-t border-white/5 text-center">
+      <p class="text-sm text-white/40 font-medium">
+        {% if mode == "signup" %}
+          Already have an account? <a href="{{ url_for('signin') }}" class="text-accent hover:underline decoration-2 underline-offset-4">Sign in</a>
+        {% else %}
+          New to <span class="text-white">Think</span><span class="text-accent">Tradie</span>? <a href="{{ url_for('signup') }}" class="text-accent hover:underline decoration-2 underline-offset-4">Create an account</a>
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

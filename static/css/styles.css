@@ -1,0 +1,64 @@
+/* TRADIEFLOW GLOBAL STYLES - ITERATION 4
+  ###########################################################################
+  SOURCE: Pixel Rocket – Global Bank Next.js Template (Aesthetic Foundation)
+  https://pixelrocket.store/free-templates/nextjs-templates/global-bank-nextjs-website-template
+  
+  WHY: This stylesheet establishes the "Deep Charcoal & Neon Lime" design system. 
+  It utilizes CSS variables for brand consistency and advanced radial gradients 
+  to simulate the high-end depth found in modern financial SaaS dashboards.
+  ###########################################################################
+*/
+
+:root {
+  /* Core Brand Palette */
+  --color-body-bg: #0e0f11;
+  --color-accent: #ccff00; /* Neon Lime Accent */
+  --color-card-bg: rgba(255, 255, 255, 0.05);
+  --color-border: rgba(255, 255, 255, 0.1);
+}
+
+/* SOURCE: MDN Web Docs - Basic CSS Selectors 
+  https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors
+*/
+body {
+  background-color: var(--color-body-bg);
+  color: #fff;
+  font-family: 'Calibri', 'Inter', sans-serif; /* Aligned with FYP Reporting Font */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* SOURCE: CSS-Tricks – Radial Gradients 
+  https://css-tricks.com/almanac/properties/g/gradient/
+  WHY: Creates the "Glassmorphism" depth effect for Bento Grid cards.
+*/
+.bg-gradient-radial-dark {
+  background-image: radial-gradient(
+    72.2% 78.49% at 49.87% 50.1%, 
+    rgba(71, 80, 98, 0.26) 0%, 
+    rgba(137, 137, 137, 0) 100%
+  );
+}
+
+/* Iteration 4 Custom Radii 
+  WHY: Modern high-level UI uses larger, smoother corner radii (rounded-5xl/7xl).
+*/
+.rounded-5xl { border-radius: 1.875rem; }
+.rounded-7xl { border-radius: 2.75rem; }
+
+/* SOURCE: MDN Web Docs - ::webkit-calendar-picker-indicator 
+  https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-calendar-picker-indicator
+  WHY: Ensures the date picker icon is visible against the dark #0e0f11 background.
+*/
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* Bento Grid Card Hover Effect */
+.bento-card-hover {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bento-card-hover:hover {
+    border-color: rgba(204, 255, 0, 0.3);
+    transform: translateY(-4px);
+}

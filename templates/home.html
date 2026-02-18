@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+
+<header class="mb-10">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-4xl md:text-5xl font-black tracking-tighter uppercase mb-2 italic">
+        <span class="text-white">Hello, </span><span class="text-accent">{{ current_user.first_name }}</span>
+      </h1>
+      <p class="text-white/50 font-medium tracking-tight">
+        {{ today_iso | date_dmy }} · Professional Dashboard
+      </p>
+    </div>
+    <div class="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest">
+      <span class="h-2 w-2 rounded-full bg-accent animate-pulse shadow-[0_0_10px_#ccff00]"></span>
+      System Active
+    </div>
+  </div>
+</header>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 relative overflow-hidden bg-white/5 border border-white/10 rounded-5xl p-8 group hover:border-accent/30 transition-all duration-500 shadow-2xl">
+    <div class="absolute -top-24 -right-24 h-64 w-64 bg-accent/10 blur-[100px] rounded-full"></div>
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl font-black tracking-tighter uppercase italic text-white">Tasks Today</h2>
+          <p class="text-sm text-white/40 font-medium">Priority items for scheduling</p>
+        </div>
+        <div class="h-12 w-12 rounded-2xl bg-accent flex items-center justify-center text-black font-black text-xl shadow-[0_0_15px_rgba(204,255,0,0.4)]">{{ today_tasks|length }}</div>
+      </div>
+      {% if today_tasks and (today_tasks|length) > 0 %}
+        <div class="space-y-4">
+          {% for t in today_tasks %}
+            <div class="flex items-center justify-between p-5 rounded-3xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.07] transition-all group/item">
+              <div class="flex items-center gap-4">
+                <div class="h-10 w-10 rounded-full bg-body border border-white/10 flex items-center justify-center group-hover/item:border-accent/50 transition-colors">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-accent"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <div>
+                  <div class="font-bold text-lg tracking-tight">{{ t.title }}</div>
+                  {% if t.notes %}<div class="text-xs text-white/40 mt-0.5 line-clamp-1">{{ t.notes }}</div>{% endif %}
+                </div>
+              </div>
+              <a href="{{ url_for('tasks') }}" class="h-10 px-5 rounded-full bg-white/5 border border-white/10 flex items-center text-xs font-black uppercase tracking-widest hover:bg-accent hover:text-black transition-all">Open</a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="py-12 flex flex-col items-center justify-center text-center bg-white/[0.02] border border-dashed border-white/10 rounded-3xl">
+          <p class="text-white/20 font-black uppercase tracking-widest text-xs italic leading-loose">No scheduled tasks for today</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <a href="{{ url_for('index') }}" class="bg-accent rounded-5xl p-8 flex flex-col justify-between group hover:scale-[1.02] transition-all duration-500 shadow-[0_20px_50px_rgba(204,255,0,0.15)]">
+    <div class="flex justify-between items-start">
+      <div class="h-14 w-14 rounded-2xl bg-black flex items-center justify-center text-2xl shadow-xl shadow-black/20">📦</div>
+      <svg class="text-black/20 group-hover:text-black transition-colors" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 17l10-10M7 7h10v10"/></svg>
+    </div>
+    <div>
+      <h3 class="text-black font-black text-3xl tracking-tighter leading-none mb-2 italic">INVENTORY</h3>
+      <p class="text-black/60 font-bold text-sm leading-tight">Monitor stock levels and track thresholds.</p>
+    </div>
+  </a>
+
+  <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <a href="{{ url_for('tasks') }}" class="bg-white/5 border border-white/10 rounded-5xl p-8 hover:border-white/30 transition-all group shadow-lg">
+      <div class="text-4xl mb-6 group-hover:scale-110 transition-transform inline-block">✅</div>
+      <h4 class="text-xl font-bold mb-1 italic uppercase tracking-tighter">
+        <span class="text-white">Task</span> <span class="text-accent">Manager</span>
+      </h4>
+      <p class="text-white/40 text-sm">Schedule and audit job progress.</p>
+    </a>
+
+    <a href="{{ url_for('documents') }}" class="bg-white/5 border border-white/10 rounded-5xl p-8 hover:border-white/30 transition-all group shadow-lg">
+      <div class="text-4xl mb-6 group-hover:scale-110 transition-transform inline-block">📷</div>
+      <h4 class="text-xl font-bold mb-1 italic uppercase tracking-tighter">
+        <span class="text-white">Document</span> <span class="text-accent">Capture</span>
+      </h4>
+      <p class="text-white/40 text-sm">Mobile-friendly site photography.</p>
+    </a>
+
+    <a href="{{ url_for('vault') }}" class="bg-white/5 border border-white/10 rounded-5xl p-8 hover:border-white/30 transition-all group shadow-lg">
+      <div class="text-4xl mb-6 group-hover:scale-110 transition-transform inline-block">📂</div>
+      <h4 class="text-xl font-bold mb-1 italic uppercase tracking-tighter">
+        <span class="text-white">Document</span> <span class="text-accent">Vault</span>
+      </h4>
+      <p class="text-white/40 text-sm">Centralized document management.</p>
+    </a>
+  </div>
+</div>
+{% endblock %}

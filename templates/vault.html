@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+<header class="mb-10">
+  <h1 class="text-4xl font-black tracking-tighter uppercase italic mb-2 text-white">
+    Vault </h1>
+  <p class="text-white/50 font-medium tracking-tight">Your centralized professional storage</p>
+</header>
+
+{# 
+  Source: Jinja2 Conditional Rendering 
+  https://jinja.palletsprojects.com/en/stable/templates/#conditionals
+#}
+{% if documents %}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for d in documents %}
+      <div class="bg-white/5 border border-white/10 rounded-5xl p-8 group hover:border-accent/40 transition-all shadow-xl relative overflow-hidden">
+        
+        <div class="flex items-center gap-4 mb-8">
+          {# Technique: Conditional Iconography based on file extension logic from Iteration 2 #}
+          <div class="h-14 w-14 rounded-2xl bg-accent flex items-center justify-center text-3xl shadow-lg shadow-accent/20 transition-transform group-hover:scale-110">
+            {% if d.filename.lower().endswith('.pdf') %}📄{% else %}🖼️{% endif %}
+          </div>
+          <div class="overflow-hidden">
+            {# Iteration 4: Displays display_name if available, falling back to sanitised filename #}
+            <h3 class="font-black tracking-tight text-lg text-white truncate">{{ d.display_name if d.display_name else d.filename }}</h3>
+            <p class="text-[10px] font-black uppercase tracking-widest text-white/30">{{ d.uploaded_at | human_time_dmy }}</p>
+          </div>
+        </div>
+
+        {# 
+           Source: MDN – HTTP Methods (POST for updates)
+           WHY: Renaming metadata allows for organized storage without breaking disk linkage.
+        #}
+        <form method="post" action="{{ url_for('vault_rename', doc_id=d.id) }}" class="mb-8">
+          <div class="relative flex items-center group/input">
+            <input type="text" name="display_name" maxlength="60" 
+                   value="{{ d.display_name if d.display_name else (d.filename.rsplit('.', 1)[0] if '.' in d.filename else d.filename) }}"
+                   class="w-full bg-black/40 border border-white/5 rounded-full pl-5 pr-24 py-2.5 text-xs text-white/60 focus:outline-none focus:border-accent transition-all placeholder-white/20">
+            <button type="submit" class="absolute right-2 px-3 py-1 bg-accent/10 text-accent text-[8px] font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-black transition-all">
+              RENAME
+            </button>
+          </div>
+        </form>
+
+        <div class="flex gap-3">
+          <a href="{{ url_for('vault_view', doc_id=d.id) }}" target="_blank"
+             class="flex-1 py-4 bg-white text-black text-center text-[10px] font-black rounded-2xl hover:bg-accent transition-colors shadow-lg uppercase tracking-widest">
+             VIEW
+          </a>
+          
+          {# Source: Python os.remove logic triggered via POST #}
+          <form method="post" action="{{ url_for('vault_delete', doc_id=d.id) }}" class="flex-1">
+            <button type="submit" class="w-full py-4 bg-white/5 border border-white/10 text-white/40 text-[10px] font-black rounded-2xl hover:bg-red-500 hover:text-white hover:border-red-500 transition-all uppercase tracking-widest">
+              DELETE
+            </button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="py-24 text-center bg-white/5 border border-dashed border-white/10 rounded-5xl">
+    <div class="text-5xl mb-6 opacity-20">📂</div>
+    <p class="text-white/20 font-black uppercase tracking-widest italic text-xs">The vault is currently empty</p>
+  </div>
+{% endif %}
+
+{% endblock %}

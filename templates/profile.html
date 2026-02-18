@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<header class="mb-10">
+  <h1 class="text-4xl font-black tracking-tighter uppercase italic mb-2 text-white">
+    Vault </h1>
+  <p class="text-white/50 font-medium tracking-tight">Your centralized professional storage</p>
+</header>
+
+<div class="max-w-2xl mx-auto">
+  <div class="bg-white/5 border border-white/10 rounded-7xl p-12 text-center relative overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
+    
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 h-64 w-64 bg-accent/20 blur-[120px] rounded-full"></div>
+
+    <div class="relative z-10">
+      <div class="inline-block p-1 bg-accent rounded-full mb-6 shadow-[0_0_25px_rgba(204,255,0,0.3)]">
+        <img src="{{ url_for('static', filename='img/builder-avatar-icon.jpg') }}" 
+             alt="avatar" 
+             class="h-32 w-32 rounded-full border-4 border-[#0e0f11] object-cover">
+      </div>
+
+      {# 
+        SOURCE: Iteration 4 Authentication Logic (app.py)
+        https://flask.palletsprojects.com/en/stable/quickstart/#sessions
+        TECHNIQUE: Conditional rendering based on the injected 'current_user' context.
+      #}
+      {% if current_user %}
+        <h2 class="text-4xl font-black tracking-tighter text-white mb-2 uppercase italic">
+          {{ current_user.first_name }} {{ current_user.last_name }}
+        </h2>
+        <p class="text-accent font-bold tracking-widest uppercase text-[10px] mb-10">
+          {{ current_user.email }}
+        </p>
+
+        <div class="grid grid-cols-2 gap-4 mb-10">
+          <div class="p-4 bg-white/5 rounded-3xl border border-white/5 group hover:border-accent/30 transition-all">
+            <p class="text-[10px] font-black uppercase tracking-widest text-white/20">Member Since</p>
+            {# 
+               SOURCE: Iteration 4 Refined human_time Filter (app.py)
+               WHY: Formats the registration timestamp into the required dd/mm/yyyy format.
+            #}
+            <p class="font-bold text-white mt-1">{{ current_user.created_at | human_time }}</p>
+          </div>
+          <div class="p-4 bg-white/5 rounded-3xl border border-white/5 group hover:border-accent/30 transition-all">
+            <p class="text-[10px] font-black uppercase tracking-widest text-white/20">Account Status</p>
+            {# Iteration 4: Simplified status label #}
+            <p class="font-bold text-accent mt-1 uppercase tracking-tight">Active</p>
+          </div>
+        </div>
+
+        {# 
+          SOURCE: MDN HTTP Methods - POST used for state-changing sign-out to prevent CSRF.
+          https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
+        #}
+        <form method="post" action="{{ url_for('signout') }}">
+          <button class="px-12 py-4 bg-white/5 border border-white/10 text-white hover:bg-white hover:text-black font-black rounded-full transition-all uppercase text-xs tracking-widest" 
+                  type="submit">
+            LOG OUT
+          </button>
+        </form>
+
+      {% else %}
+        <h2 class="text-2xl font-black text-white/30 mb-8 uppercase italic">Session Expired</h2>
+        <a class="px-12 py-4 bg-accent text-black font-black rounded-full shadow-[0_10px_30px_rgba(204,255,0,0.2)] hover:scale-105 transition-all uppercase text-xs tracking-widest" 
+           href="{{ url_for('signin') }}">
+          Sign In
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+  <h1 class="text-4xl font-black tracking-tighter text-white uppercase italic">Inventory</h1>
+  
+  <div class="flex gap-2 p-1 bg-white/5 rounded-full border border-white/10">
+    <a href="{{ url_for('index') }}" 
+       class="px-6 py-2 rounded-full text-xs font-black tracking-widest transition-all {{ 'bg-accent text-black shadow-[0_0_15px_rgba(204,255,0,0.3)]' if not only_low else 'text-white/50 hover:text-white' }}">
+       ALL ITEMS
+    </a>
+    <a href="{{ url_for('index') }}?filter=low" 
+       class="px-6 py-2 rounded-full text-xs font-black tracking-widest transition-all {{ 'bg-accent text-black shadow-[0_0_15px_rgba(204,255,0,0.3)]' if only_low else 'text-white/50 hover:text-white' }}">
+       LOW STOCK
+    </a>
+  </div>
+</div>
+
+<div class="bg-white/5 border border-white/10 rounded-5xl p-8 mb-12 shadow-2xl relative overflow-hidden">
+  <div class="absolute top-0 left-0 h-1 w-32 bg-accent shadow-[0_0_15px_#ccff00]"></div>
+  
+  <form method="post" action="{{ url_for('index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+    <div class="space-y-2">
+      <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2">Item Name</label>
+      <input name="name" required placeholder="Description" 
+             class="w-full px-5 py-3 bg-black/40 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-white placeholder-white/20 transition-all">
+    </div>
+    <div class="space-y-2">
+      <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2">Qty</label>
+      <input name="qty" type="number" min="0" value="0" 
+             class="w-full px-5 py-3 bg-black/40 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-white">
+    </div>
+    <div class="space-y-2">
+      <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2">Threshold</label>
+      <input name="threshold" type="number" min="0" value="0" 
+             class="w-full px-5 py-3 bg-black/40 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-white">
+    </div>
+    
+    <button type="submit" class="w-full py-3 bg-accent text-black font-black rounded-xl hover:scale-[1.02] transition-all shadow-[0_5px_15px_rgba(204,255,0,0.2)]">
+      ADD ITEM
+    </button>
+  </form>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for i in items %}
+  <div class="bg-white/5 border border-white/10 rounded-5xl p-8 group hover:border-accent/40 transition-all relative overflow-hidden flex flex-col h-full shadow-lg">
+    
+    {# 
+      Source: Iteration 1 logic (qty <= threshold)
+      Technique: Pulse indicator for immediate low-stock visual recognition.
+      Informed by: Tailwind CSS "Animate" documentation
+      https://tailwindcss.com/docs/animation#pulse
+    #}
+    {% if i.qty <= i.threshold %}
+      <div class="absolute top-6 right-6 flex items-center gap-2">
+        <span class="text-[10px] font-black text-accent uppercase tracking-widest">Low Stock</span>
+        <div class="h-2.5 w-2.5 rounded-full bg-accent shadow-[0_0_10px_#ccff00] animate-pulse"></div>
+      </div>
+    {% endif %}
+    
+    <div class="flex flex-col h-full">
+      <h3 class="text-2xl font-black tracking-tighter mb-1 uppercase truncate pr-16">{{ i.name }}</h3>
+      
+      <div class="flex items-end justify-between mt-auto pt-10">
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">Current Stock</p>
+          <p class="text-4xl font-black {{ 'text-accent' if i.qty <= i.threshold else 'text-white' }} tracking-tight">
+            {{ i.qty }}
+          </p>
+        </div>
+        <div class="text-right text-white/60">
+          <p class="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">Min. Threshold</p>
+          <p class="font-bold text-lg">{{ i.threshold }}</p>
+        </div>
+      </div>
+      
+      <div class="flex gap-2 mt-8 pt-6 border-t border-white/5">
+        <a href="{{ url_for('edit', item_id=i.id) }}" 
+           class="flex-1 py-3 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest text-center hover:bg-white/5 transition-colors">
+           Edit
+        </a>
+        
+        {# 
+          Source: MDN HTTP Methods – state-changing actions use POST.
+          https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
+        #}
+        <form method="post" action="{{ url_for('delete', item_id=i.id) }}" class="flex-1">
+          <button type="submit" 
+                  class="w-full py-3 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 transition-all">
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
