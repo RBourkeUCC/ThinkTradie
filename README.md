@@ -1,7 +1,7 @@
 # TradieFlow · Iteration 5
 **Version: 5 (Iteration 5)** **Date: 19 February 2026**
 
-**TradieFlow** is a lightweight, mobile-first productivity tool designed for sole traders and small crews to manage materials, tasks, and documentation without unnecessary admin. Iteration 5 marks the evolution from a functional MVP into a **Live Progressive Web App (PWA)**, transitioning the "Premium UI" into a production-ready cloud environment on Render.
+**TradieFlow** is a lightweight, mobile-first productivity tool designed for sole traders and small crews to manage inventory, tasks, and documentation without unnecessary admin. Iteration 5 marks the evolution from a functional MVP into a **Live Progressive Web App (PWA)**, transitioning the "Premium UI" into a production-ready cloud environment on Render.
 
 ## Project Roadmap
 * **Iteration 1-3:** Core Inventory, Document Capture, and Task Manager development.
