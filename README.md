@@ -14,7 +14,6 @@
 
 ### User Authentication & Cloud Access
 * **Secure Cloud Hosting:** Application now live on Render with full HTTPS encryption, mandatory for secure PWA standards.
-* **Mandatory Sign-In:** Application-wide privacy enforced via `@login_required` decorators; all core routes are locked by default.
 * **Gunicorn Production Server:** Transitioned to Gunicorn to handle concurrent mobile traffic with high stability.
 
 ### Premium Dashboard & PWA Integration
