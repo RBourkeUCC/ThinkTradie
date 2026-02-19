@@ -1,73 +1,64 @@
-# TradieFlow · Iteration 4 
-**Version: 5 (Iteration 4)** **Date: 04 February 2026**
+# TradieFlow · Iteration 5
+**Version: 5 (Iteration 5)** **Date: 19 February 2026**
 
-**TradieFlow** is a lightweight, mobile-first productivity tool designed for sole traders and small crews to manage materials, tasks, and documentation without unnecessary admin. This iteration marks the strategic rebranding from the "Tradespeople App" to **TradieFlow**, reflecting a more streamlined and professional digital experience. The application has been transformed from a functional MVP into a premium professional tool with a focus on high-end UI/UX and mandatory secure authentication.
+**TradieFlow** is a lightweight, mobile-first productivity tool designed for sole traders and small crews to manage materials, tasks, and documentation without unnecessary admin. Iteration 5 marks the evolution from a functional MVP into a **Live Progressive Web App (PWA)**, transitioning the "Premium UI" into a production-ready cloud environment on Render.
 
 ## Project Roadmap
-* **Iteration 1:** Core Inventory module with low-stock logic.
-* **Iteration 2:** Document Capture (upload/metadata) and Task Manager.
-* **Iteration 3:** Document Vault, mobile camera capture, and Daily Task view.
-* **Iteration 4:** High-level UI refurbishment, TradieFlow branding, secure user authentication, and Vault renaming.
+* **Iteration 1-3:** Core Inventory, Document Capture, and Task Manager development.
+* **Iteration 4:** High-level UI refurbishment, TradieFlow branding, and secure user authentication.
+* **Iteration 5:** Cloud deployment (Render), PWA manifest implementation, and Service Worker architecture for offline resilience.
 
 ---
 
-## Features (Iteration 4 Refinements)
+## Features (Iteration 5 Advancements)
 
-### User Authentication & Access Control
+### User Authentication & Cloud Access
+* **Secure Cloud Hosting:** Application now live on Render with full HTTPS encryption, mandatory for secure PWA standards.
 * **Mandatory Sign-In:** Application-wide privacy enforced via `@login_required` decorators; all core routes are locked by default.
-* **Secure Sessions:** Signed session cookies ensure trade data remains private to the authenticated user.
-* **Password Security:** Industry-standard PBKDF2 hashing handled via Werkzeug.
-* **Personalised Experience:** Dashboard greets users by their registered `first_name` and features a unique builder avatar.
-* **Refined Profile:** Displays "Member Since" in `dd/mm/yyyy` format with a simplified "Active" status.
+* **Gunicorn Production Server:** Transitioned to Gunicorn to handle concurrent mobile traffic with high stability.
 
-### Premium Dashboard (Bento Grid)
-* **High-Level Layout:** "Bento Grid" design for organised data visualisation inspired by bank-grade SaaS.
-* **Visual Feedback:** Real-time "System Active" pulse indicators and personalised greetings.
+### Premium Dashboard & PWA Integration
+* **Standalone Mobile Experience:** Custom `manifest.json` allows TradieFlow to be "Installed" on iOS home screens, providing a native app interface without browser bars.
+* **Bento Grid Layout:** Maintained organized data visualization inspired by bank-grade SaaS for high-level oversight.
+* **Service Worker (sw.js):** Implemented at the root level to intercept requests and provide "Cache-First" logic, ensuring the dashboard loads in low-signal environments.
 * **Aesthetic:** Responsive dark-mode palette (#0e0f11) with neon-lime (#ccff00) accents.
 
 ### Document Vault (Extended)
-* **Metadata Management:** New renaming functionality (US11) allows users to assign meaningful labels to stored files without altering the disk filename.
-* **Professional Explorer:** High-level view for site media and PDFs with secure view/delete actions.
+* **Metadata Management:** Renaming functionality allows users to assign meaningful labels to stored files.
+* **Offline Access:** Service Worker ensures the Vault interface is accessible even when the device is in Airplane Mode.
 
 ---
 
 ## Technical References & Research Sources
 
-### UI / UX & High-Level Design
-* **Pixel Rocket Global Bank Template** (Design Foundation)  
-    [https://pixelrocket.store/free-templates/nextjs-templates/global-bank-nextjs-website-template](https://pixelrocket.store/free-templates/nextjs-templates/global-bank-nextjs-website-template)
-* **Tailwind CSS Utility Patterns** (Bento Grid & Spacing)  
-    [https://tailwindcss.com/docs/grid-template-columns](https://tailwindcss.com/docs/grid-template-columns)
-* **Glassmorphism & Radial Gradients** [https://css-tricks.com/almanac/properties/g/gradient/](https://css-tricks.com/almanac/properties/g/gradient/)
+### PWA & Offline Standards
+* **MDN Web Docs: Service Worker API** (Lifecycle & Fetch Interception)
+* **W3C Web App Manifest** (Standalone Display & Icons)
+* **Google web.dev: Offline-First Foundations**
 
-### Backend & Security
-* **Werkzeug Security Helpers** (PBKDF2 Hashing)  
-    [https://werkzeug.palletsprojects.com/en/stable/utils/#module-werkzeug.security](https://werkzeug.palletsprojects.com/en/stable/utils/#module-werkzeug.security)
-* **Flask Session Management** [https://flask.palletsprojects.com/en/stable/quickstart/#sessions](https://flask.palletsprojects.com/en/stable/quickstart/#sessions)
-* **Flask View Decorators** (login_required logic)  
-    [https://flask.palletsprojects.com/en/stable/patterns/viewdecorators/](https://flask.palletsprojects.com/en/stable/patterns/viewdecorators/)
-* **Secure File Sanitisation** [https://flask.palletsprojects.com/en/stable/patterns/fileuploads/](https://flask.palletsprojects.com/en/stable/patterns/fileuploads/)
+### UI / UX & Security
+* **Pixel Rocket Global Bank Template** (Design Foundation)
+* **Werkzeug Security Helpers** (PBKDF2 Password Hashing)
+* **Flask Session Management**
 
-### Frontend Semantics
-* **Custom Branding:** Custom TF emblem designed for high-contrast visibility.
-* **Jinja2 Custom Filters:** Implementation of `dd/mm/yyyy` date formatting for UK/IE standards.
+---
 
+## Technical Diagnosis (Iteration 5)
 
+| Element | Status | Diagnosis |
+| :--- | :--- | :--- |
+| **PWA Scope** | Resolved | SW moved to root directory to ensure full control over homepage and authentication routes. |
+| **Deployment** | Active | Connected to Render via GitHub Private Repo for continuous deployment. |
+| **Data Storage** | Ephemeral | SQLite is currently stored on temporary disk; migration to PostgreSQL recommended for permanent data. |
 
-## Database Schema (SQLite)
-
-* **Users Table:** Stores first/last names, email (unique), and secure password hashes.
-* **Tasks Table:** Stores titles, notes, and ISO 8601 due_dates for Daily Task filtering.
-* **Inventory Table:** Tracks quantities and low-stock thresholds.
-* **Documents Table:** Metadata storage including `display_name`; physical files stored in `/uploads`.
+---
 
 ## Quick Start
 ```bash
-# Set up environment
-python -m venv .venv
-source .venv/bin/activate  # macOS/Linux
-.venv\Scripts\activate     # Windows
+# Live Production URL
+[https://thinktradie.onrender.com](https://thinktradie.onrender.com)
 
-# Install and run
+# Local Setup
+git clone [https://github.com/RBourkeUCC/ThinkTradie.git](https://github.com/RBourkeUCC/ThinkTradie.git)
 pip install -r requirements.txt
 python app.py
