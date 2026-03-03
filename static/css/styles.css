@@ -1,18 +1,12 @@
-/* TRADIEFLOW GLOBAL STYLES - ITERATION 4
-  ###########################################################################
-  SOURCE: Pixel Rocket – Global Bank Next.js Template (Aesthetic Foundation)
+/* ThinkTradie GLOBAL STYLES - ITERATION 4 (Updated Iteration 6)
+  SOURCE: Pixel Rocket - Global Bank Next.js Template (Aesthetic Foundation)
   https://pixelrocket.store/free-templates/nextjs-templates/global-bank-nextjs-website-template
-  
-  WHY: This stylesheet establishes the "Deep Charcoal & Neon Lime" design system. 
-  It utilizes CSS variables for brand consistency and advanced radial gradients 
-  to simulate the high-end depth found in modern financial SaaS dashboards.
-  ###########################################################################
+  WHY: Establishes the Deep Charcoal & Neon Lime design system.
 */
 
 :root {
-  /* Core Brand Palette */
   --color-body-bg: #0e0f11;
-  --color-accent: #ccff00; /* Neon Lime Accent */
+  --color-accent: #ccff00;
   --color-card-bg: rgba(255, 255, 255, 0.05);
   --color-border: rgba(255, 255, 255, 0.1);
 }
@@ -23,13 +17,13 @@
 body {
   background-color: var(--color-body-bg);
   color: #fff;
-  font-family: 'Calibri', 'Inter', sans-serif; /* Aligned with FYP Reporting Font */
+  font-family: 'Calibri', 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* SOURCE: CSS-Tricks – Radial Gradients 
+/* SOURCE: CSS-Tricks - Radial Gradients 
   https://css-tricks.com/almanac/properties/g/gradient/
-  WHY: Creates the "Glassmorphism" depth effect for Bento Grid cards.
+  WHY: Creates the Glassmorphism depth effect for Bento Grid cards.
 */
 .bg-gradient-radial-dark {
   background-image: radial-gradient(
@@ -39,15 +33,13 @@ body {
   );
 }
 
-/* Iteration 4 Custom Radii 
-  WHY: Modern high-level UI uses larger, smoother corner radii (rounded-5xl/7xl).
-*/
+/* Iteration 4 Custom Radii */
 .rounded-5xl { border-radius: 1.875rem; }
 .rounded-7xl { border-radius: 2.75rem; }
 
 /* SOURCE: MDN Web Docs - ::webkit-calendar-picker-indicator 
   https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-calendar-picker-indicator
-  WHY: Ensures the date picker icon is visible against the dark #0e0f11 background.
+  WHY: Ensures the date picker icon is visible against the dark background.
 */
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
@@ -61,4 +53,52 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .bento-card-hover:hover {
     border-color: rgba(204, 255, 0, 0.3);
     transform: translateY(-4px);
+}
+
+/* =========================================================================
+   ITERATION 6 ADDITIONS: Mobile Responsiveness Fixes
+   ========================================================================= */
+
+/* ---------------------------------------------------------------------------
+   Date Input Dark-Mode Styling
+   ---------------------------------------------------------------------------
+   SOURCE: MDN Web Docs - color-scheme CSS Property
+   https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme
+   WHY: The native date input renders with a light-themed calendar icon and 
+   text on WebKit/Blink browsers. Using color-scheme: dark instructs the 
+   browser to render all native form chrome in dark mode, which is more 
+   reliable than filter: invert() hacks that cause artefacts on Android.
+
+   SOURCE: CSS-Tricks - Fixing Flexbox Overflow Issues
+   https://css-tricks.com/flexbox-truncated-text/
+   WHY: On mobile viewports, the date input intrinsic width can exceed its 
+   grid cell. max-width: 100% ensures the input respects container bounds.
+*/
+.date-input-dark {
+    color-scheme: dark;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------------
+   Number Input Spinner Visibility on Mobile
+   ---------------------------------------------------------------------------
+   SOURCE: MDN Web Docs - appearance CSS Property
+   https://developer.mozilla.org/en-US/docs/Web/CSS/appearance
+   WHY: Mobile WebKit browsers hide native increment/decrement spinner arrows 
+   on number inputs by default. Explicitly setting -webkit-appearance and 
+   opacity ensures the spinners remain visible and interactive on touch 
+   devices, matching the desktop experience.
+
+   SOURCE: CSS-Tricks - Styling Number Inputs
+   https://css-tricks.com/snippets/css/turn-off-number-input-spinners/
+   WHY: Documents how to control spinner visibility across browsers. We 
+   invert the technique to force spinners ON rather than off.
+*/
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: inner-spin-button;
+    opacity: 1;
+    height: auto;
+    cursor: pointer;
 }
