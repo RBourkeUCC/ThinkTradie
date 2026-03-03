@@ -274,6 +274,30 @@ def vault_view(doc_id):
     if not doc: abort(404)
     return send_from_directory(os.path.join(app.root_path, os.path.dirname(doc["stored_path"])), os.path.basename(doc["stored_path"]))
 
+###############################################################################
+# NEW (Iteration 6): In-App Document Viewer Route
+# SOURCE: Flask Documentation – Rendering Templates
+# https://flask.palletsprojects.com/en/stable/quickstart/#rendering-templates
+# WHY: In PWA standalone display mode (manifest.json display: "standalone"), 
+# the browser navigation chrome (back button, address bar) is hidden. When 
+# vault_view served raw files via send_from_directory, users on mobile PWA 
+# had no UI mechanism to navigate back to the Vault, effectively becoming 
+# trapped on the document view. This route renders the document inside a 
+# themed template (vault_viewer.html) that includes explicit "Back to Vault" 
+# navigation, solving the standalone-mode navigation dead-end.
+#
+# SOURCE: MDN Web Docs – PWA display-mode: standalone
+# https://developer.mozilla.org/en-US/docs/Web/CSS/@media/display-mode
+# WHY: Understanding how standalone mode removes browser chrome is essential 
+# to designing PWA-compatible navigation flows.
+###############################################################################
+@app.get("/vault/page/<int:doc_id>")
+@login_required
+def vault_view_page(doc_id):
+    doc = get_db().execute("SELECT * FROM documents WHERE id=?", (doc_id,)).fetchone()
+    if not doc: abort(404)
+    return render_template("vault_viewer.html", doc=doc, title="ThinkTradie | Viewer")
+
 @app.post("/vault/delete/<int:doc_id>")
 @login_required
 def vault_delete(doc_id):
