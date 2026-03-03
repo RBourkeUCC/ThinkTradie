@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
+{#
+  FIX (Iteration 6): Corrected page heading from "Vault" to "Task Manager".
+  This was a copy-paste inconsistency from the Vault template introduced 
+  during the Iteration 4 UI refurbishment.
+#}
 <header class="mb-10">
   <h1 class="text-4xl font-black tracking-tighter uppercase italic mb-2 text-white">
-    Vault </h1>
-  <p class="text-white/50 font-medium tracking-tight">Your centralized professional storage</p>
+    Task <span class="text-accent">Manager</span></h1>
+  <p class="text-white/50 font-medium tracking-tight">Schedule, track, and complete your jobs</p>
 </header>
 
 <section class="mb-12">
@@ -14,8 +19,17 @@
     <h2 class="text-xs font-bold uppercase tracking-widest text-accent mb-6">Create New Task</h2>
     
     <form method="post" action="{{ url_for('tasks') }}" class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="space-y-2">
+      {#
+        FIX (Iteration 6): Changed to single-column on mobile, 3-column (2:1)
+        on desktop to prevent native date input overflow on narrow screens.
+        
+        SOURCE: MDN Web Docs - Responsive Design
+        https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Responsive_Design
+        WHY: The previous equal 2-column grid caused the date picker to overflow 
+        on mobile viewports narrower than 375px.
+      #}
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-2 space-y-2">
           <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2" for="title">Task Title</label>
           <input id="title" name="title" required placeholder="e.g. Order plasterboard" 
                  class="w-full px-6 py-4 bg-black/40 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent text-white placeholder-white/20 transition-all">
@@ -27,9 +41,14 @@
              Source: MDN - <input type="date"> 
              https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
              Why: Posts ISO YYYY-MM-DD for SQLite compatibility and US7 filtering.
+             
+             FIX (Iteration 6): Added min-w-0 and date-input-dark CSS class.
+             SOURCE: CSS-Tricks - Flexbox Truncated Text
+             https://css-tricks.com/flexbox-truncated-text/
+             WHY: Grid children default to min-width:auto preventing shrink.
           #}
           <input id="due_date" name="due_date" type="date" 
-                 class="w-full px-6 py-4 bg-black/40 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent text-white invert-[0.8] brightness-200">
+                 class="date-input-dark w-full min-w-0 px-4 py-4 bg-black/40 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent text-white">
         </div>
       </div>
 
