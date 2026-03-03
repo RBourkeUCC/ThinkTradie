@@ -20,16 +20,18 @@
     
     <form method="post" action="{{ url_for('tasks') }}" class="space-y-6">
       {#
-        FIX (Iteration 6): Changed to single-column on mobile, 3-column (2:1)
-        on desktop to prevent native date input overflow on narrow screens.
+        FIX (Iteration 6): Changed grid to stack vertically on mobile (grid-cols-1)
+        and equal two-column on desktop (md:grid-cols-2) so the Due Date input 
+        matches the Task Title input in width.
         
         SOURCE: MDN Web Docs - Responsive Design
         https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Responsive_Design
-        WHY: The previous equal 2-column grid caused the date picker to overflow 
-        on mobile viewports narrower than 375px.
+        WHY: Equal-width columns ensure visual consistency between the two 
+        form fields. Single-column mobile layout prevents the native date 
+        picker from overflowing on narrow viewports.
       #}
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="md:col-span-2 space-y-2">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
           <label class="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2" for="title">Task Title</label>
           <input id="title" name="title" required placeholder="e.g. Order plasterboard" 
                  class="w-full px-6 py-4 bg-black/40 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent text-white placeholder-white/20 transition-all">
@@ -42,13 +44,17 @@
              https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
              Why: Posts ISO YYYY-MM-DD for SQLite compatibility and US7 filtering.
              
-             FIX (Iteration 6): Added min-w-0 and date-input-dark CSS class.
-             SOURCE: CSS-Tricks - Flexbox Truncated Text
+             FIX (Iteration 6): Added date-input-dark CSS class and min-w-0 to 
+             prevent overflow on constrained mobile viewports.
+             
+             SOURCE: CSS-Tricks - Fixing Flexbox Overflow Issues
              https://css-tricks.com/flexbox-truncated-text/
              WHY: Grid children default to min-width:auto preventing shrink.
+             min-w-0 overrides this to allow the date input to respect its 
+             container boundaries on narrow screens.
           #}
           <input id="due_date" name="due_date" type="date" 
-                 class="date-input-dark w-full min-w-0 px-4 py-4 bg-black/40 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent text-white">
+                 class="date-input-dark w-full min-w-0 px-6 py-4 bg-black/40 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent text-white">
         </div>
       </div>
 
