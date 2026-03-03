@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+{#
+  NEW (Iteration 6): In-App Document Viewer
+  --------------------------------------------------------------------------
+  SOURCE: MDN Web Docs - display-mode: standalone (PWA Display Modes)
+  https://developer.mozilla.org/en-US/docs/Web/CSS/@media/display-mode
+  WHY: When a PWA runs in standalone display mode, browser chrome is removed.
+  Serving raw files via send_from_directory left users with no way to navigate 
+  back to the Vault. This template wraps documents in a branded viewer with 
+  explicit in-app navigation controls.
+
+  SOURCE: MDN Web Docs - object HTML Element
+  https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object
+  WHY: Provides native browser rendering for PDFs and images without JS libs,
+  with a built-in fallback mechanism via nested content.
+
+  SOURCE: MDN Web Docs - Window.history.back()
+  https://developer.mozilla.org/en-US/docs/Web/API/History/back
+  WHY: history.back() provides familiar browser-like back navigation as a 
+  fallback alongside the direct Vault link.
+#}
+
+<div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+  <a href="{{ url_for('vault') }}" 
+     class="inline-flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-full hover:border-accent/40 hover:bg-white/10 transition-all group">
+    {#
+      SOURCE: Heroicons (by Tailwind Labs) - Arrow Left Icon
+      https://heroicons.com/
+      WHY: Consistent SVG iconography matching the Iteration 6 icon refresh.
+    #}
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent group-hover:-translate-x-1 transition-transform">
+      <path d="M19 12H5"/>
+      <path d="m12 19-7-7 7-7"/>
+    </svg>
+    <span class="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">Back to Vault</span>
+  </a>
+  
+  {#
+    SOURCE: MDN Web Docs - HTML anchor download attribute
+    https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
+    WHY: Allows direct file download from the viewer without requiring 
+    the user to right-click or use browser save dialogs.
+  #}
+  <a href="{{ url_for('vault_view', doc_id=doc.id) }}" download
+     class="inline-flex items-center gap-3 px-6 py-3 bg-accent text-black rounded-full hover:scale-105 transition-all">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    <span class="text-[10px] font-black uppercase tracking-widest">Download</span>
+  </a>
+</div>
+
+<div class="bg-white/5 border border-white/10 rounded-5xl overflow-hidden shadow-2xl">
+  <div class="p-6 border-b border-white/5 bg-white/[0.01] flex items-center gap-4">
+    <div class="h-10 w-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
+      {% if doc.filename.lower().endswith('.pdf') %}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+      {% else %}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+      {% endif %}
+    </div>
+    <div>
+      <h2 class="font-black tracking-tight text-white">{{ doc.display_name if doc.display_name else doc.filename }}</h2>
+      <p class="text-[10px] font-black uppercase tracking-widest text-white/30">{{ doc.uploaded_at | human_time_dmy }}</p>
+    </div>
+  </div>
+  
+  {#
+    SOURCE: MDN Web Docs - img element with object-fit
+    https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit
+    WHY: object-contain ensures images scale proportionally within the 
+    viewer container without cropping, maintaining aspect ratio integrity.
+    
+    SOURCE: MDN Web Docs - object element for PDF embedding
+    https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object
+    WHY: object provides native PDF rendering in supported browsers with 
+    a graceful fallback link for mobile browsers that lack inline PDF support.
+  #}
+  <div class="p-4 flex items-center justify-center min-h-[60vh] bg-black/20">
+    {% if doc.filename.lower().endswith('.pdf') %}
+      <object data="{{ url_for('vault_view', doc_id=doc.id) }}" 
+              type="application/pdf" 
+              class="w-full h-[75vh] rounded-xl">
+        <div class="text-center py-12">
+          <p class="text-white/40 font-bold mb-4">PDF preview is not supported on this device.</p>
+          <a href="{{ url_for('vault_view', doc_id=doc.id) }}" target="_blank"
+             class="px-8 py-3 bg-accent text-black font-black rounded-full text-xs uppercase tracking-widest hover:scale-105 transition-all">
+            Open PDF Externally
+          </a>
+        </div>
+      </object>
+    {% else %}
+      <img src="{{ url_for('vault_view', doc_id=doc.id) }}" 
+           alt="{{ doc.display_name if doc.display_name else doc.filename }}"
+           class="max-w-full max-h-[75vh] object-contain rounded-xl">
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
