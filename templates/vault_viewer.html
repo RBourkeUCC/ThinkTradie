@@ -16,10 +16,11 @@
   WHY: Provides native browser rendering for PDFs and images without JS libs,
   with a built-in fallback mechanism via nested content.
 
-  SOURCE: MDN Web Docs - Window.history.back()
-  https://developer.mozilla.org/en-US/docs/Web/API/History/back
-  WHY: history.back() provides familiar browser-like back navigation as a 
-  fallback alongside the direct Vault link.
+    SOURCE: Flask Documentation – URL Building
+  https://flask.palletsprojects.com/en/stable/quickstart/#url-building
+  WHY: url_for('vault') generates a direct link back to the Vault route, 
+  which is more reliable than history.back() in PWA standalone mode where 
+  the browser history stack may be empty or unpredictable.
 #}
 
 <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
