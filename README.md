@@ -23,11 +23,11 @@ All data is tied to a personal account with sign-in authentication, so each user
 
 ## How It Was Built
 
-ThinkTradie was developed across six iterations over the course of the academic year as part of the IS4470 Final Year Project at University College Cork.
+ThinkTradie was developed across six iterations over the course of the academic year as part of the IS4470 Final Year Project for Business Information Systems in University College Cork.
 
 ### Iteration 1–3: Core Functionality
 
-The first three iterations focused on getting the basics working. I built the four modules one by one — Inventory first, then Tasks and Document Capture, then the Document Vault and the Daily Task Manager. The goal was to have a working prototype with full CRUD (create, read, update, delete) operations for each module. All development was done locally using VS Code on my laptop.
+The first three iterations focused on getting the basics working. I built the four modules one by one, Inventory first, then Tasks and Document Capture, then the Document Vault and the Daily Task Manager. The goal was to have a working prototype with full CRUD (create, read, update, delete) operations for each module. All development was done locally using VS Code on my laptop.
 
 ### Iteration 4: Authentication & UI Overhaul
 
@@ -35,11 +35,11 @@ Iteration 4 introduced user accounts with sign-in/sign-out functionality and a c
 
 ### Iteration 5: Cloud Deployment & PWA
 
-This was the biggest architectural shift. I migrated the development environment from VS Code on my laptop to Termux on my Android phone — a Linux terminal emulator that lets you run a full command-line environment on a mobile device. The purpose of Termux was specifically to bridge the gap from desktop to mobile development and prove that the entire workflow could operate from a phone.
+This was the biggest architectural shift. I migrated the development environment from VS Code on my laptop to Termux on my Android phone, a Linux terminal emulator that lets you run a full command-line environment on a mobile device. The purpose of Termux was specifically to bridge the gap from desktop to mobile development and prove that the entire workflow could operate from a phone.
 
-As part of this migration, I set up a Git repository and pushed the codebase to GitHub for the first time. GitHub was needed as the bridge between my development environment and Render, the cloud hosting platform. Once connected, every push to GitHub automatically rebuilds and deploys the app on Render — no manual server management required.
+As part of this migration, I set up a Git repository and pushed the codebase to GitHub for the first time. GitHub was needed as the bridge between my development environment and Render, the cloud hosting platform. Once connected, every push to GitHub automatically rebuilds and deploys the app on Render, no manual server management required.
 
-I also configured the PWA infrastructure — a web app manifest with high-resolution icons and a Service Worker — so the app can be installed on both Android and iPhone home screens and launches in standalone mode without browser chrome.
+I also configured the PWA infrastructure, a web app manifest with high-resolution icons and a Service Worker, so the app can be installed on both Android and iPhone home screens and launches in standalone mode without browser chrome.
 
 ### Iteration 6: Final Polish
 
